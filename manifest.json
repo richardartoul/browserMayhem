@@ -1,0 +1,27 @@
+{
+  "name": "Browser Mayhem",
+  "description": "Fly around the internet with your friends, explore the web like never before!",
+  "omnibox": {
+    "keyword": "fly"
+          },
+  "background": {
+    "scripts": ["d3.js","background.js"]
+  },
+  "version": "1.0",
+  "minimum_chrome_version": "9",
+  "manifest_version": 2,
+  "content_scripts" : [
+    {
+      "matches": ["*://*/*"],
+      "js": ["jquery.min.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["d3.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["fly.js"]
+    }
+  ]
+}
