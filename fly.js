@@ -61,28 +61,29 @@ player.rotate = function(keyCode) {
 
 //keypress listener
 d3.select("body").on("keydown", function() {
-  d3.event.preventDefault();
   var playerData = player.data()[0];
   if(d3.event.keyCode === 37) {
+    d3.event.preventDefault();
     playerData.turning = -1;
   }
   if (d3.event.keyCode === 39) {
-    //player.rotate(d3.event.keyCode);
+    d3.event.preventDefault();
     playerData.turning = 1;
   }
   if (d3.event.keyCode === 38) {
-    //player.increaseThrust();
+    d3.event.preventDefault();
     playerData.accelerating = 1;
   }
 })
 
 d3.select("body").on("keyup", function() {
-  d3.event.preventDefault();
   var playerData = player.data()[0];
   if(d3.event.keyCode === 37|| d3.event.keyCode === 39) {
+    d3.event.preventDefault();
     playerData.turning = 0;
   }
   if (d3.event.keyCode === 38) {
+    d3.event.preventDefault();
     playerData.accelerating = 0;
   }
 })
