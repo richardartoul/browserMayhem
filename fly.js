@@ -23,31 +23,21 @@ var playerData = {
   angle: 0
 }
 
-//draw player
-//might be best to reimplement this in jquery, don't see the
-//point in using d3 for player movement and drawing
-d3.select("body").insert("svg")
-  .attr("width", gameSettings.pageWidth)
-  .attr("height", gameSettings.pageHeight)
-  //makes sure anything in SVG appears over the rest of the
-  //page. May change this functionality later
+var shipUrl = chrome.extension.getURL("images/ship.png");
+var svg = d3.select("body").append("img")
+  .attr("src", shipUrl)
+  .attr("class", "playerShip")
   .style("z-index", "2147483647")
-  .style("position", "relative")
-  //maximum value that can be stored in 32 bits...should make sure player is always ontop
-  //of other elements, regardless of their z-index. Is this best solution?
+  .style("position", "absolute")
 
-var svg = d3.select("svg").append("rect")
-  .attr("fill", "Red")
-  .style("z-index", "2147483647")
-
-var player = d3.select("rect").data([playerData])
+var player = d3.selectAll(".playerShip").data([playerData])
   .attr("x", 0)
   .attr("y", 0)
   .attr("width", gameSettings.playerRadius)
   .attr("height",gameSettings.playerRadius)
   //.attr("fill", shipColor)
   .attr("id", "player")
-  .attr("transform", "translate (" + gameSettings.pageWidth/2 +
+  .attr("transform", "translate(" + gameSettings.pageWidth/2 +
      "," + gameSettings.pageHeight/2 + ")")
 
 //player rotation
@@ -56,16 +46,12 @@ player.rotate = function(keyCode) {
   var playerData = player.data()[0];
   if (keyCode === 37) {
     playerData.angle -= gameSettings.playerRotationSpeed;
-    var transformation = "translate(" + playerData.xCoordinate + ","
-      + playerData.yCoordinate + ") rotate(" + playerData.angle +" 20 20)";
-    player.attr("transform", transformation);
   }
   if (keyCode === 39) {
     playerData.angle += gameSettings.playerRotationSpeed;
-    var transformation = "translate(" + playerData.xCoordinate + ","
-      + playerData.yCoordinate + ") rotate(" + playerData.angle +" 20 20)";
-    player.attr("transform", transformation);
   }
+  var transformation = "rotate(" + playerData.angle + "deg)";
+  player.style("transform", transformation);
 }
 
 //player thrust
@@ -92,10 +78,12 @@ d3.select("body").on("keydown", function() {
 var movePlayer = function() {
   var playerData = player.data()[0];
   playerData.xCoordinate += playerData.xVector;
-  playerData.yCoordinate -= playerData.yVector;
-  var transformation = "translate(" + playerData.xCoordinate + ","
-      + playerData.yCoordinate + ") rotate(" + playerData.angle +" 20 20)";
-  player.attr("transform", transformation);
+  playerData.yCoordinate += playerData.yVector;
+  var playerStyle = {
+    left: playerData.xCoordinate + "px",
+    bottom: playerData.yCoordinate + "px"
+  }
+  player.style(playerStyle);
 }
 
 //redraw player every frame

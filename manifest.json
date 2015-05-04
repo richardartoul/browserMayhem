@@ -23,5 +23,8 @@
       "matches": ["*://*/*"],
       "js": ["fly.js"]
     }
+  ],
+  "web_accessible_resources" : [
+    "images/*"
   ]
 }
