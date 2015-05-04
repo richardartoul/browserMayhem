@@ -14,6 +14,12 @@ var gameSettings = {
   playerRotationSpeed: 10,
   playerAcelleration: 0.2,
   playerDecelleration: 0.03,
+  teleportBuffer: 50
+}
+
+//test
+if (gameSettings.pageHeight <= gameSettings.screenHeight) {
+  $("body").css("overflow", "hidden");
 }
 
 var playerData = {
@@ -122,11 +128,27 @@ var gameLoop = function() {
   if (playerData.turning === 1) {
     playerData.angle += gameSettings.playerRotationSpeed;
   }
+
 }
 
 //player movement
 var drawPlayer = function() {
   var playerData = player.data()[0];
+
+  //handles going offscreen
+  if (playerData.xCoordinate > gameSettings.screenWidth + gameSettings.playerRadius) {
+    playerData.xCoordinate = 0 - gameSettings.playerRadius;
+  }
+  else if (playerData.xCoordinate < 0 - gameSettings.playerRadius) {
+    playerData.xCoordinate = gameSettings.screenWidth + gameSettings.playerRadius;
+  }
+  if(playerData.yCoordinate < 0 - gameSettings.playerRadius) {
+    playerData.yCoordinate = gameSettings.screenHeight + gameSettings.playerRadius;
+  }
+  else if (playerData.yCoordinate > gameSettings.screenHeight + gameSettings.playerRadius) {
+    playerData.yCoordinate = 0 - gameSettings.playerRadius;
+  }
+
   playerData.xCoordinate += playerData.xVector;
   playerData.yCoordinate += playerData.yVector;
   var transformation = "rotate(" + playerData.angle + "deg)";
@@ -139,6 +161,13 @@ var drawPlayer = function() {
 
   //updates css properties of ship to actually move it
   player.style(playerStyle);  
+
+  // if (playerData.yCoordinate > gameSettings.screenHeight) {
+  //   playerData.yCoordinate = 0 - gameSettings.playerRadius;
+  // }
+  // if (playerData.yCoordinate < gameSettings.screenHeight) {
+  //   playerData.yCoordinate = gameSettings.screenHeight + gameSettings.playerRadius;
+  // }
 }
 
 //redraw player every frame
