@@ -14,10 +14,16 @@ var gameSettings = {
   playerRotationSpeed: 10,
   playerAcelleration: 0.2,
   playerDecelleration: 0.03,
+  playerTopSpeed: 10,
   teleportBuffer: 50
 }
 
-//test
+//helper functions
+var calculateSpeed = function(xVector,yVector) {
+  return Math.sqrt(Math.pow(xVector,2) + Math.pow(yVector,2));
+}
+
+//disables scrolling if page fits in viewport
 if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
   $("body").css("overflow", "hidden");
 }
@@ -99,14 +105,14 @@ var gameLoop = function() {
   var playerData = player.data()[0];
 
   //handles acceleration
-  if (playerData.accelerating) {
+  if (playerData.accelerating && calculateSpeed(playerData.xVector,playerData.yVector) < gameSettings.playerTopSpeed) {
     var radians = (playerData.angle * Math.PI) / 180;
-    //calculate vector increases based on player anger
+    //calculate vector increases based on player angle
     playerData.xVector += Math.sin(radians) * gameSettings.playerAcelleration;
     playerData.yVector += Math.cos(radians) * gameSettings.playerAcelleration;
   }
+  //handles decelleration
   else {
-      //handles decelleration
     if (playerData.xVector > 0) { 
       playerData.xVector -= playerData.xVector * gameSettings.playerDecelleration;
     }
@@ -162,12 +168,6 @@ var drawPlayer = function() {
   //updates css properties of ship to actually move it
   player.style(playerStyle);  
 
-  // if (playerData.yCoordinate > gameSettings.screenHeight) {
-  //   playerData.yCoordinate = 0 - gameSettings.playerRadius;
-  // }
-  // if (playerData.yCoordinate < gameSettings.screenHeight) {
-  //   playerData.yCoordinate = gameSettings.screenHeight + gameSettings.playerRadius;
-  // }
 }
 
 //redraw player every frame
