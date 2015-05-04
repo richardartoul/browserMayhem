@@ -12,7 +12,8 @@ var gameSettings = {
   playerRadius: 40,
   shipColor: "Red",
   playerRotationSpeed: 15,
-  playerMovementSpeed: 0.2
+  playerMovementSpeed: 0.2,
+  playerDecelleration: 0.01
 }
 
 var playerData = {
@@ -83,7 +84,22 @@ var movePlayer = function() {
     left: playerData.xCoordinate + "px",
     bottom: playerData.yCoordinate + "px"
   }
+  //updates css properties of ship to actually move it
   player.style(playerStyle);
+
+  //handles decelleration
+  if (playerData.xVector > 0) { 
+    playerData.xVector -= playerData.xVector * gameSettings.playerDecelleration;
+  }
+  if (playerData.yVector > 0) {
+    playerData.yVector -= playerData.yVector * gameSettings.playerDecelleration;
+  }
+  if (playerData.xVector < 0) { 
+    playerData.xVector += -playerData.xVector * gameSettings.playerDecelleration;
+  }
+  if (playerData.yVector < 0) {
+    playerData.yVector += -playerData.yVector * gameSettings.playerDecelleration;
+  }
 }
 
 //redraw player every frame
