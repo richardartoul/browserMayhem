@@ -11,9 +11,9 @@ var gameSettings = {
   pageHeight: $(document).height(),
   playerRadius: 40,
   shipColor: "Red",
-  playerRotationSpeed: 15,
-  playerMovementSpeed: 0.2,
-  playerDecelleration: 0.01
+  playerRotationSpeed: 10,
+  playerAcelleration: 0.2,
+  playerDecelleration: 0.03,
 }
 
 var playerData = {
@@ -21,7 +21,9 @@ var playerData = {
   yCoordinate: gameSettings.screenHeight/2,
   xVector: 0,
   yVector: 0,
-  angle: 0
+  angle: 0,
+  turning: 0,
+  accelerating:0
 }
 
 var shipUrl = chrome.extension.getURL("images/ship.png");
@@ -51,57 +53,94 @@ player.rotate = function(keyCode) {
   if (keyCode === 39) {
     playerData.angle += gameSettings.playerRotationSpeed;
   }
+
+  //this should probably be moved to the drawPlayer function
   var transformation = "rotate(" + playerData.angle + "deg)";
   player.style("transform", transformation);
-}
-
-//player thrust
-player.increaseThrust = function(keyCode) {
-  var playerData = player.data()[0];
-  var radians = (playerData.angle * Math.PI) / 180;
-  //calculate vector increases based on player anger
-  playerData.xVector += Math.sin(radians) * gameSettings.playerMovementSpeed;
-  playerData.yVector += Math.cos(radians) * gameSettings.playerMovementSpeed;
 }
 
 //keypress listener
 d3.select("body").on("keydown", function() {
   d3.event.preventDefault();
-  if(d3.event.keyCode === 37 || d3.event.keyCode === 39) {
-    player.rotate(d3.event.keyCode);
+  var playerData = player.data()[0];
+  if(d3.event.keyCode === 37) {
+    playerData.turning = -1;
+  }
+  if (d3.event.keyCode === 39) {
+    //player.rotate(d3.event.keyCode);
+    playerData.turning = 1;
   }
   if (d3.event.keyCode === 38) {
-    player.increaseThrust();
+    //player.increaseThrust();
+    playerData.accelerating = 1;
   }
 })
 
-//player movement
-var movePlayer = function() {
+d3.select("body").on("keyup", function() {
+  d3.event.preventDefault();
   var playerData = player.data()[0];
-  playerData.xCoordinate += playerData.xVector;
-  playerData.yCoordinate += playerData.yVector;
-  var playerStyle = {
-    left: playerData.xCoordinate + "px",
-    bottom: playerData.yCoordinate + "px"
+  if(d3.event.keyCode === 37|| d3.event.keyCode === 39) {
+    playerData.turning = 0;
   }
-  //updates css properties of ship to actually move it
-  player.style(playerStyle);
+  if (d3.event.keyCode === 38) {
+    playerData.accelerating = 0;
+  }
+})
 
-  //handles decelleration
-  if (playerData.xVector > 0) { 
-    playerData.xVector -= playerData.xVector * gameSettings.playerDecelleration;
+//game loop
+var gameLoop = function() {
+  var playerData = player.data()[0];
+
+  //handles acceleration
+  if (playerData.accelerating) {
+    var radians = (playerData.angle * Math.PI) / 180;
+    //calculate vector increases based on player anger
+    playerData.xVector += Math.sin(radians) * gameSettings.playerAcelleration;
+    playerData.yVector += Math.cos(radians) * gameSettings.playerAcelleration;
   }
-  if (playerData.yVector > 0) {
-    playerData.yVector -= playerData.yVector * gameSettings.playerDecelleration;
+  else {
+      //handles decelleration
+    if (playerData.xVector > 0) { 
+      playerData.xVector -= playerData.xVector * gameSettings.playerDecelleration;
+    }
+    if (playerData.yVector > 0) {
+      playerData.yVector -= playerData.yVector * gameSettings.playerDecelleration;
+    }
+    if (playerData.xVector < 0) { 
+      playerData.xVector += -playerData.xVector * gameSettings.playerDecelleration;
+    }
+    if (playerData.yVector < 0) {
+      playerData.yVector += -playerData.yVector * gameSettings.playerDecelleration;
+    }
   }
-  if (playerData.xVector < 0) { 
-    playerData.xVector += -playerData.xVector * gameSettings.playerDecelleration;
+
+  //handles rotation
+  if (playerData.turning === -1) {
+    playerData.angle -= gameSettings.playerRotationSpeed;
   }
-  if (playerData.yVector < 0) {
-    playerData.yVector += -playerData.yVector * gameSettings.playerDecelleration;
+  if (playerData.turning === 1) {
+    playerData.angle += gameSettings.playerRotationSpeed;
   }
 }
 
+//player movement
+var drawPlayer = function() {
+  var playerData = player.data()[0];
+  playerData.xCoordinate += playerData.xVector;
+  playerData.yCoordinate += playerData.yVector;
+  var transformation = "rotate(" + playerData.angle + "deg)";
+
+  var playerStyle = {
+    left: playerData.xCoordinate + "px",
+    bottom: playerData.yCoordinate + "px",
+    transform: transformation
+  }
+
+  //updates css properties of ship to actually move it
+  player.style(playerStyle);  
+}
+
 //redraw player every frame
-d3.timer(movePlayer)
+d3.timer(drawPlayer);
+d3.timer(gameLoop);
 
