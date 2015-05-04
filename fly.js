@@ -18,7 +18,7 @@ var gameSettings = {
 }
 
 //test
-if (gameSettings.pageHeight <= gameSettings.screenHeight) {
+if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
   $("body").css("overflow", "hidden");
 }
 
