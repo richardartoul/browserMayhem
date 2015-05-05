@@ -16,7 +16,8 @@ var gameSettings = {
   playerDecelleration: 0.03,
   playerTopSpeed: 10,
   teleportBuffer: 50,
-  bulletSpeed: 20
+  bulletSpeed: 20,
+  bulletRadius: 20
 }
 
 //bullet objects
@@ -26,6 +27,7 @@ var Bullet = function(xCoordinate,yCoordinate,bulletSpeed,angle) {
   this.xVector = calculateXVector(bulletSpeed,angle);
   this.yVector = calculateYVector(bulletSpeed,angle);
   this.angle = angle;
+  this.offScreen = false;
 }
 
 var createBullet = function() {
@@ -102,8 +104,8 @@ var svg = d3.select("body").append("img")
   .style("position", "absolute")
 
 var player = d3.selectAll(".playerShip").data([playerData])
-  .attr("x", 0)
-  .attr("y", 0)
+  //.attr("x", 0)
+  //.attr("y", 0)
   .attr("width", gameSettings.playerRadius)
   .attr("height",gameSettings.playerRadius)
   //.attr("fill", shipColor)
@@ -234,7 +236,19 @@ var drawBullets = function() {
   allBullets.data().forEach(function(d) {
     d.xCoordinate += d.xVector;
     d.yCoordinate += d.yVector;
+
+    if (d.xCoordinate > gameSettings.screenWidth + gameSettings.bulletRadius || 
+      d.xCoordinate < 0 - gameSettings.bulletRadius ||
+      d.yCoordinate > gameSettings.screenHeight + gameSettings.bulletRadius || 
+      d.yCoordinate < 0 - gameSettings.bulletRadius) 
+      {
+        d.offScreen = true;
+      }
   })
+
+  d3.selectAll(".bullet").filter(function(d) {
+    return (d.offScreen === true);
+  }).remove();
 
   allBullets
     .style("left", function(d) {
