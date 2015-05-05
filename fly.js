@@ -18,9 +18,40 @@ var gameSettings = {
   teleportBuffer: 50
 }
 
+//bullet objects
+var Bullet = function(xCoordinate,yCoordinate,xVector,yVector,angle) {
+  this.xCoordinate = xCoordinate;
+  this.yCoordinate = yCoordinate;
+  this.xVector = xVector;
+  this.yVector = yVector;
+  this.angle = angle;
+}
+
 //helper functions
 var calculateSpeed = function(xVector,yVector) {
   return Math.sqrt(Math.pow(xVector,2) + Math.pow(yVector,2));
+}
+
+var degreesToRadians = function(degrees) {
+  return (degrees * Math.PI) / 180;
+}
+
+var calculateXVector = function(vector,angle) {
+  var radians = degreesToRadians(angle);
+  return Math.sin(radians) * vector;
+}
+
+var calculateYVector = function(vector,angle) {
+  var radians = degreesToRadians(angle);
+  return Math.cos(radians) * vector;
+}
+
+var calculateXYVectors = function(vector,angle) {
+  var radians = (angle * Math.PI) / 180;
+  var xyVectors = {
+    xVector: calculateXVector(vector,angle),
+    yVector: calculateYVector(vector,angle)
+  }
 }
 
 //disables scrolling if page fits in viewport
@@ -52,8 +83,8 @@ var player = d3.selectAll(".playerShip").data([playerData])
   .attr("height",gameSettings.playerRadius)
   //.attr("fill", shipColor)
   .attr("id", "player")
-  .attr("transform", "translate(" + gameSettings.pageWidth/2 +
-     "," + gameSettings.pageHeight/2 + ")")
+  //.attr("transform", "translate(" + gameSettings.pageWidth/2 +
+    // "," + gameSettings.pageHeight/2 + ")")
 
 //player rotation
 player.rotate = function(keyCode) {
@@ -106,10 +137,8 @@ var gameLoop = function() {
 
   //handles acceleration
   if (playerData.accelerating && calculateSpeed(playerData.xVector,playerData.yVector) < gameSettings.playerTopSpeed) {
-    var radians = (playerData.angle * Math.PI) / 180;
-    //calculate vector increases based on player angle
-    playerData.xVector += Math.sin(radians) * gameSettings.playerAcelleration;
-    playerData.yVector += Math.cos(radians) * gameSettings.playerAcelleration;
+    playerData.xVector += calculateXVector(gameSettings.playerAcelleration,playerData.angle);
+    playerData.yVector += calculateYVector(gameSettings.playerAcelleration,playerData.angle);
   }
   //handles decelleration
   else {
@@ -168,6 +197,12 @@ var drawPlayer = function() {
   //updates css properties of ship to actually move it
   player.style(playerStyle);  
 
+}
+
+var drawBullets = function() {
+  d3.selectAll(".bullet").data(function(d) {
+    return 
+  })
 }
 
 //redraw player every frame
