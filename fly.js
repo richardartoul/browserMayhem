@@ -27,6 +27,31 @@ var Bullet = function(xCoordinate,yCoordinate,xVector,yVector,angle) {
   this.angle = angle;
 }
 
+
+var createBullet = function () {
+  
+  var playerData = player.data()[0];
+
+  var bulletData = new Bullet(playerData.xCoordinate,playerData.yCoordinate,
+    playerData.xVector,playerData.yVector,playerData.angle)
+
+  var bulletUrl = chrome.extension.getURL("images/bullet.png");
+  var bulletObj = d3.select("body").append("img").data([bulletData])
+    .attr("src", bulletUrl)
+    .attr("class", "bullet")
+    .style("z-index", "2147483647")
+    .style("position", "absolute")
+    .style("left", function(d) {
+      return d.xCoordinate + "px"
+    })
+    .style("bottom", function(d) {
+      return d.yCoordinate + "px"
+    })
+    .style("transform", function(d) {
+      return "rotate(" + d.angle + "deg)"
+    })
+} 
+  
 //helper functions
 var calculateSpeed = function(xVector,yVector) {
   return Math.sqrt(Math.pow(xVector,2) + Math.pow(yVector,2));
@@ -116,6 +141,10 @@ d3.select("body").on("keydown", function() {
   if (d3.event.keyCode === 38) {
     d3.event.preventDefault();
     playerData.accelerating = 1;
+  }
+  if (d3.event.keyCode === 32) {
+    d3.event.preventDefault();
+    createBullet();
   }
 })
 
