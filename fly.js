@@ -15,25 +15,25 @@ var gameSettings = {
   playerAcelleration: 0.2,
   playerDecelleration: 0.03,
   playerTopSpeed: 10,
-  teleportBuffer: 50
+  teleportBuffer: 50,
+  bulletSpeed: 20
 }
 
 //bullet objects
-var Bullet = function(xCoordinate,yCoordinate,xVector,yVector,angle) {
+var Bullet = function(xCoordinate,yCoordinate,bulletSpeed,angle) {
   this.xCoordinate = xCoordinate;
   this.yCoordinate = yCoordinate;
-  this.xVector = xVector;
-  this.yVector = yVector;
+  this.xVector = calculateXVector(bulletSpeed,angle);
+  this.yVector = calculateYVector(bulletSpeed,angle);
   this.angle = angle;
 }
 
-
-var createBullet = function () {
+var createBullet = function() {
   
   var playerData = player.data()[0];
 
   var bulletData = new Bullet(playerData.xCoordinate,playerData.yCoordinate,
-    playerData.xVector,playerData.yVector,playerData.angle)
+    gameSettings.bulletSpeed,playerData.angle)
 
   var bulletUrl = chrome.extension.getURL("images/bullet.png");
   var bulletObj = d3.select("body").append("img").data([bulletData])
@@ -229,12 +229,24 @@ var drawPlayer = function() {
 }
 
 var drawBullets = function() {
-  d3.selectAll(".bullet").data(function(d) {
-    return 
+  var allBullets = d3.selectAll(".bullet");
+
+  allBullets.data().forEach(function(d) {
+    d.xCoordinate += d.xVector;
+    d.yCoordinate += d.yVector;
   })
+
+  allBullets
+    .style("left", function(d) {
+      return d.xCoordinate + "px";
+    })
+    .style("bottom", function(d) {
+      return d.yCoordinate + "px";
+    })
 }
 
 //redraw player every frame
 d3.timer(drawPlayer);
 d3.timer(gameLoop);
+d3.timer(drawBullets);
 
