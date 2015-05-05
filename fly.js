@@ -82,9 +82,11 @@ var calculateXYVectors = function(vector,angle) {
 }
 
 //disables scrolling if page fits in viewport
-if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
-  $("body").css("overflow", "hidden");
-}
+$(document).ready({
+  if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
+    $("body").css("overflow", "hidden");
+  }
+})
 
 var playerData = {
   xCoordinate: gameSettings.screenWidth/2,
@@ -104,14 +106,9 @@ var svg = d3.select("body").append("img")
   .style("position", "absolute")
 
 var player = d3.selectAll(".playerShip").data([playerData])
-  //.attr("x", 0)
-  //.attr("y", 0)
   .attr("width", gameSettings.playerRadius)
   .attr("height",gameSettings.playerRadius)
-  //.attr("fill", shipColor)
   .attr("id", "player")
-  //.attr("transform", "translate(" + gameSettings.pageWidth/2 +
-    // "," + gameSettings.pageHeight/2 + ")")
 
 //player rotation
 player.rotate = function(keyCode) {
