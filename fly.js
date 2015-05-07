@@ -34,7 +34,7 @@ var createBullet = function() {
   
   var playerData = player.data()[0];
 
-  var bulletData = new Bullet(playerData.xCoordinate,playerData.yCoordinate,
+  var bulletData = new Bullet(playerData.xCoordinate+10,playerData.yCoordinate+10,
     gameSettings.bulletSpeed,playerData.angle)
 
   var bulletUrl = chrome.extension.getURL("images/bullet.png");
