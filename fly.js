@@ -22,22 +22,27 @@ var gameSettings = {
 
 //bullet objects
 var Bullet = function(xCoordinate,yCoordinate,bulletSpeed,angle) {
+	//the following two lines have the bullets spawn 10px forward of the ship's center
+	this.xCoordinate = xCoordinate + calculateXVector(10,angle)
+	this.yCoordinate = yCoordinate - calculateYVector(10,angle)
+	/*
   if ((angle >= -90 && angle <= 0) || (angle >= 270 && angle <= 360)) {
-    this.xCoordinate = xCoordinate + calculateYVector(10,angle);
-    this.yCoordinate = yCoordinate - calculateXVector(10,angle);
+    this.xCoordinate = xCoordinate + calculateYVector(0,angle);
+    this.yCoordinate = yCoordinate - calculateXVector(0,angle);
   }
   if ((angle >= -180 && angle <= -90) || (angle >= 180 && angle <= 270)) {
-    this.xCoordinate = xCoordinate - calculateYVector(10,angle);
-    this.yCoordinate = yCoordinate - calculateXVector(10,angle);  
+    this.xCoordinate = xCoordinate - calculateYVector(0,angle);
+    this.yCoordinate = yCoordinate - calculateXVector(0,angle);  
   }
   if ((angle >= -270 && angle <= -180) || (angle >= 90 && angle <= 180)) {
-    this.xCoordinate = xCoordinate - calculateYVector(10,angle);
-    this.yCoordinate = yCoordinate + calculateXVector(10,angle); 
+    this.xCoordinate = xCoordinate - calculateYVector(0,angle);
+    this.yCoordinate = yCoordinate + calculateXVector(0,angle); 
   }
   if((angle >= -360 && angle <= -270) || (angle >= 0 && angle <= 90)) {
-    this.xCoordinate = xCoordinate + calculateYVector(10,angle);
-    this.yCoordinate = yCoordinate + calculateXVector(10,angle);  
+    this.xCoordinate = xCoordinate + calculateYVector(0,angle);
+    this.yCoordinate = yCoordinate + calculateXVector(0,angle);  
   }
+  */
   this.xVector = calculateXVector(bulletSpeed,angle);
   this.yVector = calculateYVector(bulletSpeed,angle);
   console.log(angle);
