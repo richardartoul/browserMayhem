@@ -22,10 +22,27 @@ var gameSettings = {
 
 //bullet objects
 var Bullet = function(xCoordinate,yCoordinate,bulletSpeed,angle) {
-  this.xCoordinate = xCoordinate;
-  this.yCoordinate = yCoordinate;
+  if ((angle >= -90 && angle <= 0) || (angle >= 270 && angle <= 360)) {
+    this.xCoordinate = xCoordinate + calculateYVector(10,angle);
+    this.yCoordinate = yCoordinate - calculateXVector(10,angle);
+  }
+  if ((angle >= -180 && angle <= -90) || (angle >= 180 && angle <= 270)) {
+    this.xCoordinate = xCoordinate - calculateYVector(10,angle);
+    this.yCoordinate = yCoordinate - calculateXVector(10,angle);  
+  }
+  if ((angle >= -270 && angle <= -180) || (angle >= 90 && angle <= 180)) {
+    this.xCoordinate = xCoordinate - calculateYVector(10,angle);
+    this.yCoordinate = yCoordinate + calculateXVector(10,angle); 
+  }
+  if((angle >= -360 && angle <= -270) || (angle >= 0 && angle <= 90)) {
+    this.xCoordinate = xCoordinate + calculateYVector(10,angle);
+    this.yCoordinate = yCoordinate + calculateXVector(10,angle);  
+  }
   this.xVector = calculateXVector(bulletSpeed,angle);
   this.yVector = calculateYVector(bulletSpeed,angle);
+  console.log(angle);
+  console.log(this.xVector);
+  console.log(this.yVector);
   this.angle = angle;
   this.offScreen = false;
 }
@@ -46,7 +63,7 @@ var createBullet = function() {
     .style("left", function(d) {
       return d.xCoordinate + "px"
     })
-    .style("bottom", function(d) {
+    .style("top", function(d) {
       return d.yCoordinate + "px"
     })
     .style("transform", function(d) {
@@ -82,13 +99,15 @@ var calculateXYVectors = function(vector,angle) {
 }
 
 //disables scrolling if page fits in viewport
-if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
-  $("body").css("overflow", "hidden");
-}
+// $(document).ready({
+//   if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWidth <= gameSettings.screenWidth) {
+//     $("body").css("overflow", "hidden");
+//   }
+// })
 
 var playerData = {
-  xCoordinate: gameSettings.screenWidth/2,
-  yCoordinate: gameSettings.screenHeight/2,
+  xCoordinate: 0,
+  yCoordinate: 0,
   xVector: 0,
   yVector: 0,
   angle: 0,
@@ -104,30 +123,34 @@ var svg = d3.select("body").append("img")
   .style("position", "absolute")
 
 var player = d3.selectAll(".playerShip").data([playerData])
-  //.attr("x", 0)
-  //.attr("y", 0)
   .attr("width", gameSettings.playerRadius)
   .attr("height",gameSettings.playerRadius)
-  //.attr("fill", shipColor)
   .attr("id", "player")
-  //.attr("transform", "translate(" + gameSettings.pageWidth/2 +
-    // "," + gameSettings.pageHeight/2 + ")")
 
 //player rotation
-player.rotate = function(keyCode) {
-  //data on the d3 player object is stored as an object inside an array
-  var playerData = player.data()[0];
-  if (keyCode === 37) {
-    playerData.angle -= gameSettings.playerRotationSpeed;
-  }
-  if (keyCode === 39) {
-    playerData.angle += gameSettings.playerRotationSpeed;
-  }
+// player.rotate = function(keyCode) {
+//   //data on the d3 player object is stored as an object inside an array
+//   var playerData = player.data()[0];
+//   if (keyCode === 37) {
+//     playerData.angle -= gameSettings.playerRotationSpeed;
+//   }
+//   if (keyCode === 39) {
+//     playerData.angle += gameSettings.playerRotationSpeed;
+//   }
 
-  //this should probably be moved to the drawPlayer function
-  var transformation = "rotate(" + playerData.angle + "deg)";
-  player.style("transform", transformation);
-}
+//   console.log("the rotation in rotate function is", playerData.angle);
+//   if (playerData.angle > 360) {
+//     playerData.angle -= 360;
+//   }
+//   if (playerData.angle < -360) {
+//     playerData.angle += 360;
+//   }
+//   console.log("its now", playerData.angle);
+
+//   //this should probably be moved to the drawPlayer function
+//   var transformation = "rotate(" + playerData.angle + "deg)";
+//   player.style("transform", transformation);
+// }
 
 //keypress listener
 d3.select("body").on("keydown", function() {
@@ -195,6 +218,14 @@ var gameLoop = function() {
     playerData.angle += gameSettings.playerRotationSpeed;
   }
 
+  //resets angles after a full rotation
+  if (playerData.angle > 360) {
+    playerData.angle -= 360;
+  }
+  if(playerData.angle < -360) {
+    playerData.angle += 360;
+  }
+
 }
 
 //player movement
@@ -216,12 +247,12 @@ var drawPlayer = function() {
   }
 
   playerData.xCoordinate += playerData.xVector;
-  playerData.yCoordinate += playerData.yVector;
+  playerData.yCoordinate -= playerData.yVector;
   var transformation = "rotate(" + playerData.angle + "deg)";
 
   var playerStyle = {
     left: playerData.xCoordinate + "px",
-    bottom: playerData.yCoordinate + "px",
+    top: playerData.yCoordinate + "px",
     transform: transformation
   }
 
@@ -235,7 +266,7 @@ var drawBullets = function() {
 
   allBullets.data().forEach(function(d) {
     d.xCoordinate += d.xVector;
-    d.yCoordinate += d.yVector;
+    d.yCoordinate -= d.yVector;
 
     if (d.xCoordinate > gameSettings.screenWidth + gameSettings.bulletRadius || 
       d.xCoordinate < 0 - gameSettings.bulletRadius ||
@@ -254,7 +285,7 @@ var drawBullets = function() {
     .style("left", function(d) {
       return d.xCoordinate + "px";
     })
-    .style("bottom", function(d) {
+    .style("top", function(d) {
       return d.yCoordinate + "px";
     })
 }
