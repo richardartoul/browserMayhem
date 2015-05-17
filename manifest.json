@@ -3,7 +3,9 @@
   "description": "Fly around the internet with your friends, explore the web like never before!",
   "omnibox": {
     "keyword": "fly"
-          },
+  },
+  //allows the script to determine the url of the page it is on
+  "permissions": ["tabs"],
   "background": {
     "scripts": ["d3.js","background.js"]
   },
@@ -21,7 +23,15 @@
     },
     {
       "matches": ["*://*/*"],
+      "js": ["socket.io.js"]
+    },
+    {
+      "matches": ["*://*/*"],
       "js": ["utils.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["network.js"]
     },
     {
       "matches": ["*://*/*"],
@@ -41,7 +51,7 @@
     },
     {
       "matches": ["*://*/*"],
-      "js": ["fly.js"]
+      "js": ["main.js"]
     }
   ],
   "web_accessible_resources" : [

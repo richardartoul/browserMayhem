@@ -6,13 +6,17 @@ if (gameSettings.pageHeight <= gameSettings.screenHeight || gameSettings.pageWid
   $("body").css("overflow", "hidden");
 }
 
+socket.emit('playerUrl', gameSettings.currentUrl);
+
 var player = new Ship();
 
-var gameLoop = function() {
+  var gameLoop = function() {
   //could make render() call physics as well as renderBullets, but maybe better to keep modular?
   player.physics();
   player.render();
   player.renderBullets();
+  updatePlayerLocation();
+  // getUrl();
 }
 
 d3.timer(gameLoop);

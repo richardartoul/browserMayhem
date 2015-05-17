@@ -1,5 +1,6 @@
 //code will be need to be updated to distinguish between users ship and online players ship - subclass?
 var Ship = function() {
+  this.shipId = gameSettings.playerId;
   this.xCoordinate = gameSettings.screenWidth/2,
   this.yCoordinate = gameSettings.screenHeight/2,
   this.xVector = 0,
@@ -111,4 +112,15 @@ Ship.prototype.renderBullets = function() {
 	for (var i = 0; i < this.bullets.length; i++) {
 		this.bullets[i].render();
   	}
+}
+
+Ship.prototype.networkObj = function() {
+	return {
+		shipId: this.shipId,
+		xCoordinate: this.xCoordinate,
+		yCoordinate: this.yCoordinate,
+		xVector: this.xVector,
+		yVector: this.yVector,
+		angle: this.angle
+	};
 }	
