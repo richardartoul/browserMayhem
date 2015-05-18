@@ -21,6 +21,26 @@
     },
     {
       "matches": ["*://*/*"],
+      "js": ["utils.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["gameSettings.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["controls.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["bullet.js"]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": ["ship.js"]
+    },
+    {
+      "matches": ["*://*/*"],
       "js": ["fly.js"]
     }
   ],
