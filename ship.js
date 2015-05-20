@@ -116,7 +116,7 @@ Ship.prototype.renderBullets = function() {
 
 Ship.prototype.networkObj = function() {
 	return {
-		shipId: this.shipId,
+		player: this.shipId,
 		xCoordinate: this.xCoordinate,
 		yCoordinate: this.yCoordinate,
 		xVector: this.xVector,
