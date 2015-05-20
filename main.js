@@ -5,7 +5,6 @@
 //networking test
 var socket = io('http://localhost:3000');
 
-
 var getUrl = function(callback) {
 	chrome.runtime.sendMessage({'query': "url"}, function(response) {
 		callback(response.url);
@@ -30,6 +29,16 @@ getUrl(function(foundUrl){
 
 socket.on("otherPlayerLocation", function(otherPlayerObj) {
 	console.log(otherPlayerObj);
+	//change it so network doesnt send self location?
+	if (otherPlayerObj.player !== gameSettings.playerId) {
+		if (!gameSettings.otherShips[otherPlayerObj.player]) {
+			gameSettings.otherShips[otherPlayerObj.player] = new OtherShip(otherPlayerObj);
+		}
+		else {
+			//should probably be moved into gameloop
+			gameSettings.otherShips[otherPlayerObj.player].render();
+		}
+	}
 });
 
 setInterval(updatePlayerLocation,5000);

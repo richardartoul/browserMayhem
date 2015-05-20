@@ -16,5 +16,6 @@ var gameSettings = {
   bulletSpeed: 20,
   bulletRadius: 40,
   currentUrl: getUrl(),
-  playerId: window.prompt("Select a username:", "Type your username here...")
+  playerId: window.prompt("Select a username:", "Type your username here..."),
+  otherShips: {}
 }
