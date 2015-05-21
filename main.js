@@ -27,29 +27,34 @@ getUrl(function(foundUrl){
 });
 // socket.emit('playerUrl', {url: getUrl(), player: player.shipId});
 
+//networking to receive other players locations from server
 socket.on("otherPlayerLocation", function(otherPlayerObj) {
-	console.log(otherPlayerObj);
 	//change it so network doesnt send self location?
+	//add new players
 	if (otherPlayerObj.player !== gameSettings.playerId) {
 		if (!gameSettings.otherShips[otherPlayerObj.player]) {
 			gameSettings.otherShips[otherPlayerObj.player] = new OtherShip(otherPlayerObj);
 		}
+		//update existing players and re-render them
 		else {
 			//should probably be moved into gameloop
-			gameSettings.otherShips[otherPlayerObj.player].render();
+			gameSettings.otherShips[otherPlayerObj.player].update(otherPlayerObj);
+			// gameSettings.otherShips[otherPlayerObj.player].render();
 		}
 	}
 });
 
-setInterval(updatePlayerLocation,5000);
+setInterval(updatePlayerLocation,5);
 
   var gameLoop = function() {
   //could make render() call physics as well as renderBullets, but maybe better to keep modular?
   player.physics();
   player.render();
   player.renderBullets();
-  // updatePlayerLocation();
-  // getUrl();
+  //rendeer all other player ships
+  for (var key in gameSettings.otherShips) {
+  	gameSettings.otherShips[key].render();
+  }
 }
 
 d3.timer(gameLoop);

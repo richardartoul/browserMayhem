@@ -94,12 +94,21 @@ OtherShip.prototype.render = function() {
   this.svg.style(playerStyle);
 }
 
+OtherShip.prototype.update = function(networkObj) {
+  this.xCoordinate = networkObj.xCoordinate,
+  this.yCoordinate = networkObj.yCoordinate,
+  this.xVector = networkObj.xVector,
+  this.yVector = networkObj.yVector,
+  this.angle = networkObj.angle
+}
+
 OtherShip.prototype.renderBullets = function() {
 	for (var i = 0; i < this.bullets.length; i++) {
 		this.bullets[i].render();
   	}
 }
 
+//probably dont need this
 OtherShip.prototype.networkObj = function() {
 	return {
 		player: this.shipId,
