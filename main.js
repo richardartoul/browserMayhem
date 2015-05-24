@@ -45,8 +45,9 @@ socket.on("otherPlayerLocation", function(otherPlayerObj) {
 });
 
 setInterval(updatePlayerLocation,5);
+setInterval(console.log(gameSettings.otherShips),1000);
 
-  var gameLoop = function() {
+var gameLoop = function() {
   //could make render() call physics as well as renderBullets, but maybe better to keep modular?
   player.physics();
   player.render();
@@ -54,7 +55,6 @@ setInterval(updatePlayerLocation,5);
   //rendeer all other player ships
   for (var key in gameSettings.otherShips) {
   	gameSettings.otherShips[key].render();
-  	console.log(gameSettings.otherShips[key].xVector);
   }
 }
 

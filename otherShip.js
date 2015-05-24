@@ -19,11 +19,12 @@ OtherShip.prototype.initialize = function() {
    this.svg = d3.select("body").append("img")
 	  .attr("src", this.url)
 	  .attr("class", "otherShip")
+    .attr("id", this.shipId)
 	  //puts OtherShip above all other elements on page
 	  .style("z-index", "2147483647")
 	  .style("position", "absolute");
 
-  this.svg = d3.selectAll(".otherShip")
+  this.svg = d3.selectAll("#" + this.shipId)
 	  .attr("width", gameSettings.playerRadius)
 	  .attr("height",gameSettings.playerRadius)	
 	  .attr("id", "player")
