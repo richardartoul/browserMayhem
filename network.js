@@ -1,6 +1,6 @@
-var socket = io('http://localhost:3000');
+// var socket = io('http://localhost:3000');
 
-// socket.emit('playerUrl', {url: player.url, playerId: player.shipId});
+// // socket.emit('playerUrl', {url: player.url, playerId: player.shipId});
 
 var getUrl = function() {
 	chrome.runtime.sendMessage({'query': "url"}, function(response) {
@@ -8,6 +8,6 @@ var getUrl = function() {
 	});
 }
 
-var updatePlayerLocation = function() {
-	socket.emit('playerLocation', player.networkObj());
-}
+// var updatePlayerLocation = function() {
+// 	socket.emit('playerLocation', player.networkObj());
+// }

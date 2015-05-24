@@ -3,7 +3,7 @@
 
 //disables scrolling if page fits in viewport
 //networking test
-var socket = io('http://localhost:3000');
+var socket = io('https://blooming-depths-9616.herokuapp.com/');
 
 var getUrl = function(callback) {
 	chrome.runtime.sendMessage({'query': "url"}, function(response) {
@@ -54,6 +54,7 @@ setInterval(updatePlayerLocation,5);
   //rendeer all other player ships
   for (var key in gameSettings.otherShips) {
   	gameSettings.otherShips[key].render();
+  	console.log(gameSettings.otherShips[key].xVector);
   }
 }
 
