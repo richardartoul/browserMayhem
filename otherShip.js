@@ -104,9 +104,20 @@ OtherShip.prototype.update = function(networkObj) {
 }
 
 OtherShip.prototype.renderBullets = function() {
+  var collides = function(a, b) {
+    if (a.xCoordinate < b.xCoordinate + 20 &&
+        a.xCoordinate + 20 > b.xCoordinate &&
+        a.yCoordinate < b.yCoordinate + 20 &&
+        a.yCoordinate + 20 > b.yCoordinate) { return true;}
+    return false;
+  }
+
 	for (var i = 0; i < this.bullets.length; i++) {
 		this.bullets[i].render();
-  	}
+    if (collides(player, this.bullets[i])) {
+      alert("you got me");
+    }
+  } 
 }
 
 //probably dont need this

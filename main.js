@@ -70,6 +70,7 @@ var gameLoop = function() {
   updatePlayerLocation();
   //rendeer all other player ships
   for (var key in gameSettings.otherShips) {
+  	gameSettings.otherShips[key].physics();
   	gameSettings.otherShips[key].render();
   	gameSettings.otherShips[key].renderBullets();
   }
