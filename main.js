@@ -3,8 +3,8 @@
 
 //disables scrolling if page fits in viewport
 //networking test
-// var socket = io('https://blooming-depths-9616.herokuapp.com/');
-var socket = io('127.0.0.1:3000');
+var socket = io('https://blooming-depths-9616.herokuapp.com/');
+// var socket = io('127.0.0.1:3000');
 
 var getUrl = function(callback) {
 	chrome.runtime.sendMessage({'query': "url"}, function(response) {
