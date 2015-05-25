@@ -46,6 +46,7 @@ Ship.prototype.rotate = function() {
 Ship.prototype.fire = function() {
   //10s here need to be replace with a variable
   this.bullets.push(new Bullet(this.xCoordinate+10, this.yCoordinate+10, gameSettings.bulletSpeed, this.angle));
+  socket.emit("playerFired", this.networkObj());
 }
 
 Ship.prototype.physics = function() {
